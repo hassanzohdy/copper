@@ -4,6 +4,14 @@ All notable changes to `@mongez/copper` are documented here. The format follows 
 
 ---
 
+## [2.1.1] — CI matrix fix
+
+### Changed
+
+- Dropped Node 18 from the CI matrix (Node 18 reached EOL on April 30, 2025, and `vitest@3` transitive dependencies fail to install cleanly there). Matrix is now Node 20 + Node 22 on Ubuntu, plus Node 20 on Windows.
+
+---
+
 ## [2.1.0] — Chainable colors
 
 ### Added
