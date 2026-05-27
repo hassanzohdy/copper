@@ -107,7 +107,7 @@ import { colors, link, symbols } from "@mongez/copper";
 
 function reportError(code: string, message: string) {
   const url = `https://errors.example.com/${code}`;
-  console.error(`${colors.red(symbols.cross)} ${message}`);
+  console.error(`${colors.red.bold(symbols.cross)} ${message}`);
   console.error(`  ${colors.gray("See:")} ${link(code, url)}`);
 }
 ```
@@ -120,7 +120,7 @@ In terminals that don't support OSC-8 the user still sees `code (https://errors.
 import { box, colors, link } from "@mongez/copper";
 
 console.log(box([
-  colors.bold(colors.cyan("my-cli")) + " " + colors.gray("v" + pkg.version),
+  colors.cyan.bold("my-cli") + " " + colors.gray("v" + pkg.version),
   "",
   `Docs: ${link("read here", "https://example.com/docs")}`,
 ].join("\n"), {

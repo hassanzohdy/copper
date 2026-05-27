@@ -8,30 +8,23 @@ description: |
 
 # Colors
 
-Every color and modifier supports both call styles — pick whichever reads better at the site. Both produce identical ANSI output.
+Chain colors and modifiers chalk-style. Each chain step builds a fresh callable formatter — lazy, stateless, reusable.
 
 ```ts
 import { colors, createColors, type ColorName, type ChainFormatter } from "@mongez/copper";
 
-// Chaining (chalk-style)
+colors.red("error");
 colors.red.bold("error");
 colors.bgWhite.black.bold(" WARN ");
+colors.gray.italic("hint");
+colors.red.bold.underline("critical");
 
-// Composition (picocolors-style)
-colors.red(colors.bold("error"));
-colors.bgWhite(colors.black(colors.bold(" WARN ")));
-
-// Mix freely
-colors.bold(colors.red.italic("emphatic"));
-```
-
-Chains are lazy and stateless — `colors.red.bold` is a callable formatter you can store and reuse:
-
-```ts
 const danger = colors.red.bold.underline;
 danger("File not found");
 danger("Connection refused");
 ```
+
+> Composition (`colors.red(colors.bold(x))`) produces identical ANSI output and is the natural shape for indexed access (`colors[name](x)` where `name` is a runtime `ColorName`). Every chain example below has a composition equivalent — pick whichever reads better at the call site.
 
 ## Modifiers
 
@@ -90,7 +83,9 @@ Use this to:
 - Force ANSI in a sub-process whose `stdout` isn't a TTY but is being captured.
 - Build a separate "diff" or "patch" themed instance with its own palette.
 
-## Typed color names
+## Typed color names (the composition case)
+
+When the color name is decided at runtime, indexed access + composition is the right shape — chains are a compile-time-only thing:
 
 ```ts
 import { colors, type ColorName } from "@mongez/copper";
@@ -99,9 +94,12 @@ function paint(level: "ok" | "fail", text: string) {
   const c: ColorName = level === "ok" ? "green" : "red";
   return colors[c](text);
 }
+
+// Add a modifier via composition:
+colors[c](colors.bold(text));
 ```
 
-`ColorName` excludes the meta keys `isColorSupported` and `createColors` so it's safe to index `colors[name]`.
+`ColorName` is derived from the `COLOR_NAMES` tuple — it excludes the meta keys `isColorSupported` and `createColors` so `colors[name]` is always a callable formatter.
 
 ## Replacing chalk
 

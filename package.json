@@ -1,6 +1,6 @@
 {
   "name": "@mongez/copper",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "Zero-dependency CLI toolkit: ANSI colors with a 20+ palette, spinners, progress bars, boxed messages, themed loggers, OSC-8 hyperlinks, and ANSI stripping. NO_COLOR friendly.",
   "main": "src/index.ts",
   "sideEffects": false,

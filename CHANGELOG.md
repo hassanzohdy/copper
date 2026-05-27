@@ -4,6 +4,15 @@ All notable changes to `@mongez/copper` are documented here. The format follows 
 
 ---
 
+## [2.1.2] — Docs lead with chaining
+
+### Changed
+
+- Reframed README, colors SKILL.md, recipes SKILL.md, utilities SKILL.md, and llms-full.txt so chaining (`colors.red.bold(x)`) is the primary call style in every example. Composition (`colors.red(colors.bold(x))`) is documented as an alternative with one explicit use case — runtime-decided color names via `colors[name](x)` typed by `ColorName`.
+- No code changes; chains and composition still produce identical ANSI output.
+
+---
+
 ## [2.1.1] — CI matrix fix
 
 ### Changed

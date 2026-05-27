@@ -31,7 +31,7 @@ Remove every ANSI escape sequence — colors, modifiers, cursor moves, **and** O
 ```ts
 import { stripAnsi, colors, link } from "@mongez/copper";
 
-stripAnsi(colors.bold(colors.red("error")));                 // "error"
+stripAnsi(colors.red.bold("error"));                         // "error"
 stripAnsi(link("docs", "https://example.com"));              // "docs"
 stripAnsi("plain");                                          // "plain"
 stripAnsi(42);                                               // "42"
@@ -63,8 +63,8 @@ Glyph set with automatic ASCII fallbacks on classic Windows `cmd.exe`. Detection
 ```ts
 import { symbols, colors } from "@mongez/copper";
 
-console.log(`${colors.green(symbols.tick)} Saved`);
-console.log(`${colors.red(symbols.cross)} Failed`);
+console.log(`${colors.green.bold(symbols.tick)} Saved`);
+console.log(`${colors.red.bold(symbols.cross)} Failed`);
 console.log(`${colors.gray(symbols.pointer)} Press any key`);
 ```
 

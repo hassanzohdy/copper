@@ -24,6 +24,7 @@ Building a polished CLI in Node usually means stacking five or six separate depe
 import { colors, spinner, progress, box, log, link } from "@mongez/copper";
 
 log.info("Starting build");
+console.log(colors.cyan.bold("→ Compiling..."));
 
 const sp = spinner({ text: "Compiling…" }).start();
 await build();
@@ -33,7 +34,7 @@ const bar = progress({ total: files.length, color: "lime" });
 for (const f of files) { await upload(f); bar.tick(); }
 bar.done();
 
-console.log(box(`Deploy complete — ${link("view", "https://app.example.com")}`, {
+console.log(box(`${colors.green.bold("Deploy complete")} — ${link("view", "https://app.example.com")}`, {
   borderStyle: "round",
   borderColor: "green",
 }));
@@ -85,9 +86,9 @@ import {
   colors, spinner, progress, log, box, link, stripAnsi, symbols, createColors,
 } from "@mongez/copper";
 
-// 1. Colors with deep palette
-console.log(colors.bold(colors.lime("Booting up…")));
-console.log(colors.bgGold(colors.black(" WARNING ")));
+// 1. Colors with deep palette — chain for chalk-style ergonomics
+console.log(colors.lime.bold("Booting up…"));
+console.log(colors.bgGold.black(" WARNING "));
 
 // 2. Logger
 log.info("Server", { port: 4000 });
@@ -132,11 +133,22 @@ plain.red("hi"); // "hi"
 import { colors } from "@mongez/copper";
 
 colors.red("error");
-colors.bold(colors.cyan("info"));
-colors.bgGreen(colors.black(" OK "));
-colors.italic(colors.gray("hint"));
-colors.bgLavender(colors.indigo("dreamy"));
+colors.cyan.bold("info");
+colors.bgGreen.black(" OK ");
+colors.gray.italic("hint");
+colors.bgLavender.indigo("dreamy");
+colors.red.bold.underline("critical");
 ```
+
+Chains are lazy, stateless, and reusable — store one once and call it as a regular formatter:
+
+```ts
+const danger = colors.red.bold.underline;
+danger("File not found");
+danger("Connection refused");
+```
+
+> Both call styles produce identical ANSI output. Chaining (`colors.red.bold(x)`) is the default in this README because it reads tighter at the call site, but the equivalent composition (`colors.red(colors.bold(x))`) works in every example below.
 
 ### Reference
 
@@ -150,7 +162,9 @@ colors.bgLavender(colors.indigo("dreamy"));
 | Forced builder | `createColors(true)` / `createColors(false)` | Override env detection |
 | Types | `Colors`, `ColorName`, `Formatter` | TS support for indexed access |
 
-### Typed color names
+### Indexed access with a typed color name
+
+When the color name is computed at runtime — e.g. driven by a config or a log level — call it as a function:
 
 ```ts
 import { colors, type ColorName } from "@mongez/copper";
@@ -161,29 +175,7 @@ function paint(level: "ok" | "fail", text: string) {
 }
 ```
 
-### Two call styles — chaining or composition
-
-Every color and modifier is **both** a callable function and a chainable object. Pick whichever reads better at the call site — both produce identical ANSI output.
-
-```ts
-// Chaining (chalk-style):
-colors.red.bold("error");
-colors.bgWhite.black.bold(" WARN ");
-colors.dim.italic.gray("hint");
-
-// Composition (picocolors-style):
-colors.red(colors.bold("error"));
-colors.bgWhite(colors.black(colors.bold(" WARN ")));
-colors.dim(colors.italic(colors.gray("hint")));
-```
-
-Chains compose lazily — each `.<color>` lookup builds a new formatter, so `colors.red.bold` is just a function you can store, pass around, or call multiple times. Nothing is mutated, no global state.
-
-```ts
-const errorStyle = colors.red.bold.underline;
-errorStyle("File not found");
-errorStyle("Connection refused");
-```
+This is the one place where the composition shape is the natural fit — `colors[c]` returns a callable formatter, and you'd typically combine it with one or two modifiers via `colors[c](colors.bold(text))`.
 
 ### Replacing chalk
 
@@ -310,7 +302,7 @@ const log = createLogger({
   level: process.env.QUIET ? "warn" : "debug",
   stream: process.stderr,
   levels: {
-    error: { symbol: "💥", label: "BOOM", color: colors.redBright },
+    error: { symbol: "💥", label: "BOOM", color: colors.redBright.bold },
   },
 });
 ```
@@ -369,9 +361,9 @@ console.log(`See ${link("the docs", "https://github.com/hassanzohdy/copper")}`);
 Removes every ANSI escape — colors, modifiers, cursor moves, **and** OSC-8 hyperlinks. Stringifies non-string input.
 
 ```ts
-stripAnsi(colors.bold(colors.red("error")));  // "error"
-stripAnsi(link("docs", "https://x.com"));     // "docs"
-stripAnsi(42);                                // "42"
+stripAnsi(colors.red.bold("error"));       // "error"
+stripAnsi(link("docs", "https://x.com"));  // "docs"
+stripAnsi(42);                             // "42"
 ```
 
 ### `symbols`
@@ -379,8 +371,8 @@ stripAnsi(42);                                // "42"
 ```ts
 import { symbols, colors } from "@mongez/copper";
 
-console.log(`${colors.green(symbols.tick)} Saved`);
-console.log(`${colors.red(symbols.cross)} Failed`);
+console.log(`${colors.green.bold(symbols.tick)} Saved`);
+console.log(`${colors.red.bold(symbols.cross)} Failed`);
 console.log(`${colors.gray(symbols.pointer)} Press any key`);
 ```
 
@@ -470,7 +462,7 @@ import { colors, link, symbols } from "@mongez/copper";
 
 function reportError(code: string, message: string) {
   const url = `https://errors.example.com/${code}`;
-  console.error(`${colors.red(symbols.cross)} ${message}`);
+  console.error(`${colors.red.bold(symbols.cross)} ${message}`);
   console.error(`  ${colors.gray("See:")} ${link(code, url)}`);
 }
 ```
@@ -481,7 +473,7 @@ function reportError(code: string, message: string) {
 import { box, colors, link } from "@mongez/copper";
 
 console.log(box([
-  colors.bold(colors.cyan("my-cli")) + " " + colors.gray("v" + pkg.version),
+  colors.cyan.bold("my-cli") + " " + colors.gray("v" + pkg.version),
   "",
   `Docs: ${link("read here", "https://example.com/docs")}`,
 ].join("\n"), {
