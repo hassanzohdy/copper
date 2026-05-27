@@ -4,6 +4,26 @@ All notable changes to `@mongez/copper` are documented here. The format follows 
 
 ---
 
+## [2.1.0] — Chainable colors
+
+### Added
+
+- **Chalk-style chaining** on every color and modifier — `colors.red.bold("hi")` is now equivalent to `colors.red(colors.bold("hi"))`. Both produce identical ANSI output. Chains compose lazily and are stateless: `const danger = colors.red.bold.underline;` is a plain callable formatter you can store, pass, and reuse.
+- Exported `ChainFormatter` type — the recursive `Formatter & { [K in ColorName]: ChainFormatter }` shape that powers chaining.
+- Exported `COLOR_NAMES` tuple — the single source of truth for `ColorName`.
+- 6 new vitest cases covering chain composition, multi-step chains, independence, disabled-instance chains, and meta-key isolation. Total: 44 tests.
+
+### Changed
+
+- `ColorName` is now derived from the `COLOR_NAMES` const tuple instead of from `keyof Colors` (which was self-referential). The resulting union is identical to v2.0.0.
+- Dropped `@vitest/coverage-v8` dev dep and the `test:coverage` script — it pulled a postinstall that broke on Node 18 CI. `yarn test` still produces the same suite output; add coverage back on a per-project basis.
+
+### Fixed
+
+- `bgIndigoBright` close sequence was `\x1b[39m` (fg reset) instead of `\x1b[49m` (bg reset). Background reset now correctly emits CSI 49.
+
+---
+
 ## [2.0.0] — Major rewrite
 
 ### Breaking changes

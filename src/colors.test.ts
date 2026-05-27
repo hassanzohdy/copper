@@ -55,6 +55,43 @@ describe("createColors(enabled)", () => {
   });
 });
 
+describe("chainable colors API", () => {
+  it("chains color and modifier (outer wraps inner)", () => {
+    // colors.red.bold("hi")  →  red(bold("hi"))
+    expect(enabled.red.bold("hi")).toBe(enabled.red(enabled.bold("hi")));
+  });
+
+  it("supports 3+ chain steps", () => {
+    const a = enabled.red.bold.bgWhite("hi");
+    const b = enabled.red(enabled.bold(enabled.bgWhite("hi")));
+    expect(a).toBe(b);
+  });
+
+  it("each chain is independent — building red.bold does not mutate red", () => {
+    const direct = enabled.red("hi");
+    void enabled.red.bold; // build chain
+    expect(enabled.red("hi")).toBe(direct);
+  });
+
+  it("disabled instance still exposes chains, all no-ops", () => {
+    expect(disabled.red.bold.underline("hi")).toBe("hi");
+  });
+
+  it("chained formatter still types as Formatter (callable)", () => {
+    const f = enabled.green.bold;
+    expect(typeof f).toBe("function");
+    expect(f("x")).toBe(enabled.green(enabled.bold("x")));
+  });
+
+  it("only color/modifier keys are chainable — meta keys pass through", () => {
+    // accessing a meta key on a chain step returns undefined (the proxy
+    // target is a plain function, which has no `createColors` on it)
+    expect((enabled.red as unknown as Record<string, unknown>).createColors).toBeUndefined();
+    // but at the top level it's still there
+    expect(typeof enabled.createColors).toBe("function");
+  });
+});
+
 describe("default colors singleton", () => {
   it("has the expected color keys", () => {
     const keys = Object.keys(colors);

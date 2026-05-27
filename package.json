@@ -1,6 +1,6 @@
 {
   "name": "@mongez/copper",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Zero-dependency CLI toolkit: ANSI colors with a 20+ palette, spinners, progress bars, boxed messages, themed loggers, OSC-8 hyperlinks, and ANSI stripping. NO_COLOR friendly.",
   "main": "src/index.ts",
   "sideEffects": false,
@@ -12,12 +12,10 @@
   },
   "scripts": {
     "test": "vitest run",
-    "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage"
+    "test:watch": "vitest"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
-    "@vitest/coverage-v8": "^3.0.0",
     "typescript": "^5.4.0",
     "vitest": "^3.0.0"
   },

@@ -161,7 +161,33 @@ function paint(level: "ok" | "fail", text: string) {
 }
 ```
 
+### Two call styles — chaining or composition
+
+Every color and modifier is **both** a callable function and a chainable object. Pick whichever reads better at the call site — both produce identical ANSI output.
+
+```ts
+// Chaining (chalk-style):
+colors.red.bold("error");
+colors.bgWhite.black.bold(" WARN ");
+colors.dim.italic.gray("hint");
+
+// Composition (picocolors-style):
+colors.red(colors.bold("error"));
+colors.bgWhite(colors.black(colors.bold(" WARN ")));
+colors.dim(colors.italic(colors.gray("hint")));
+```
+
+Chains compose lazily — each `.<color>` lookup builds a new formatter, so `colors.red.bold` is just a function you can store, pass around, or call multiple times. Nothing is mutated, no global state.
+
+```ts
+const errorStyle = colors.red.bold.underline;
+errorStyle("File not found");
+errorStyle("Connection refused");
+```
+
 ### Replacing chalk
+
+A near 1:1 import swap thanks to chaining:
 
 ```diff
 - import chalk from "chalk";
@@ -171,7 +197,7 @@ function paint(level: "ok" | "fail", text: string) {
 + colors.red(text);
 
 - chalk.red.bold(text);
-+ colors.red(colors.bold(text));
++ colors.red.bold(text);
 ```
 
 For chalk's tagged-template syntax pair with [`colorize-template`](https://github.com/usmanyunusov/colorize-template):

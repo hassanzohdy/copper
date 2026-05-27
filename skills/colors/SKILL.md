@@ -1,19 +1,36 @@
 ---
 name: mongez-copper-colors
 description: |
-  ANSI colorizer with a 20+ named palette (basic 4-bit + 256-color hues like `lime`, `teal`, `brown`, `gold`, `chocolate`, `pink`, `purple`, `lavender`, `indigo`, `orange`, `slate`), foreground / background / *Bright* / *bgBright* variants, plus modifiers (`bold`, `italic`, `dim`, `underline`, `inverse`, `hidden`, `strikethrough`, `reset`). `NO_COLOR` and `FORCE_COLOR` aware.
-  TRIGGER when: code imports `colors`, `createColors`, `Colors`, `ColorName`, or `Formatter` from `@mongez/copper`; user asks "how do I color CLI text / replace chalk / detect NO_COLOR / force colors / 256-color terminal output / get a typed color name"; calls like `colors.red(x)`, `colors.bgGold(x)`, `colors.bold(colors.cyan(x))`.
+  ANSI colorizer with a 20+ named palette (basic 4-bit + 256-color hues like `lime`, `teal`, `brown`, `gold`, `chocolate`, `pink`, `purple`, `lavender`, `indigo`, `orange`, `slate`), foreground / background / *Bright* / *bgBright* variants, plus modifiers (`bold`, `italic`, `dim`, `underline`, `inverse`, `hidden`, `strikethrough`, `reset`). Supports BOTH chalk-style chaining (`colors.red.bold("x")`) and picocolors-style composition (`colors.red(colors.bold("x"))`). `NO_COLOR` and `FORCE_COLOR` aware.
+  TRIGGER when: code imports `colors`, `createColors`, `Colors`, `ColorName`, `ChainFormatter`, or `Formatter` from `@mongez/copper`; user asks "how do I color CLI text / chain colors / replace chalk / detect NO_COLOR / force colors / 256-color terminal output / get a typed color name"; calls like `colors.red(x)`, `colors.red.bold(x)`, `colors.bgGold(x)`, `colors.bold(colors.cyan(x))`.
   SKIP: browser/CSS styling (this is ANSI only); `console.log` without `@mongez/copper`; React/JSX text styling.
 ---
 
 # Colors
 
-```ts
-import { colors, createColors, type ColorName } from "@mongez/copper";
+Every color and modifier supports both call styles — pick whichever reads better at the site. Both produce identical ANSI output.
 
-colors.red("error");
-colors.bold(colors.cyan("info"));
-colors.bgGreen(colors.black(" OK "));
+```ts
+import { colors, createColors, type ColorName, type ChainFormatter } from "@mongez/copper";
+
+// Chaining (chalk-style)
+colors.red.bold("error");
+colors.bgWhite.black.bold(" WARN ");
+
+// Composition (picocolors-style)
+colors.red(colors.bold("error"));
+colors.bgWhite(colors.black(colors.bold(" WARN ")));
+
+// Mix freely
+colors.bold(colors.red.italic("emphatic"));
+```
+
+Chains are lazy and stateless — `colors.red.bold` is a callable formatter you can store and reuse:
+
+```ts
+const danger = colors.red.bold.underline;
+danger("File not found");
+danger("Connection refused");
 ```
 
 ## Modifiers
@@ -88,17 +105,20 @@ function paint(level: "ok" | "fail", text: string) {
 
 ## Replacing chalk
 
+Near-1:1 import swap thanks to chaining:
+
 ```ts
-// chalk → copper
 - import chalk from "chalk";
 + import { colors } from "@mongez/copper";
 
 - chalk.red(text);
 + colors.red(text);
 
-// Chain → nest
 - chalk.red.bold(text);
-+ colors.red(colors.bold(text));
++ colors.red.bold(text);
+
+- chalk.bgWhite.black.bold(text);
++ colors.bgWhite.black.bold(text);
 ```
 
 For chalk's tagged-template syntax (`chalk\`{red ${value}}\``), use `colorize-template` against the copper instance:
@@ -113,7 +133,7 @@ colorize`{red.bold Build} took {yellow ${ms}ms}`;
 
 ## Composition safety
 
-When you nest `colors.x(colors.y(text))` and `text` already contains the inner closer code, copper rewrites internal closers to re-open the outer color — so chains do not leak:
+When you nest `colors.x(colors.y(text))` (or chain `colors.x.y(text)`) and `text` already contains the inner closer code, copper rewrites internal closers to re-open the outer color — so chains do not leak:
 
 ```ts
 colors.bold(colors.red("inner"));

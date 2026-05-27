@@ -24,7 +24,7 @@ Every export comes from the root:
 
 ```ts
 import {
-  colors, createColors, type Colors, type ColorName, type Formatter,
+  colors, createColors, type Colors, type ColorName, type ChainFormatter, type Formatter,
   spinner, type SpinnerHandle, type SpinnerOptions,
   progress, type ProgressHandle, type ProgressOptions,
   box, type BoxOptions, type BoxStyle,
