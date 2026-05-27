@@ -1,31 +1,54 @@
-// animations.ts
+import { progress } from "./progress";
+import { spinner, SpinnerHandle } from "./spinner";
 
-export function displayLoadingBar(iterations = 20, delay = 100) {
-  process.stdout.write("Loading: |");
-  let current = 0;
+/**
+ * @deprecated Use `progress({ total })` for a real progress bar with
+ * `tick` / `update` / `done`. This helper is kept as a thin shim so v1
+ * code does not break — it now returns a handle you can `stop()`.
+ *
+ * Renders an animated loading bar and resolves when `iterations` is hit.
+ */
+export function displayLoadingBar(iterations = 20, delay = 100): {
+  promise: Promise<void>;
+  stop: () => void;
+} {
+  const bar = progress({ total: iterations });
+  let stopped = false;
 
-  const interval = setInterval(() => {
-    if (current >= iterations) {
-      process.stdout.write("| Done!\n");
-      clearInterval(interval);
-    } else {
-      process.stdout.write("=");
-      current++;
+  const promise = new Promise<void>((resolve) => {
+    const timer = setInterval(() => {
+      if (stopped) {
+        clearInterval(timer);
+        return;
+      }
+      bar.tick();
+      if (bar.isComplete) {
+        clearInterval(timer);
+        bar.done();
+        resolve();
+      }
+    }, delay);
+    if (typeof (timer as { unref?: () => void }).unref === "function") {
+      (timer as { unref: () => void }).unref();
     }
-  }, delay);
+  });
+
+  return {
+    promise,
+    stop() {
+      stopped = true;
+      bar.stop();
+    },
+  };
 }
 
-export function displayThreeDotsAnimation(iterations = 3, delay = 1000) {
-  let current = 0;
-
-  const interval = setInterval(() => {
-    if (current >= iterations) {
-      process.stdout.clearLine(0);
-      process.stdout.cursorTo(0);
-      current = 0;
-    }
-
-    process.stdout.write("...");
-    current++;
-  }, delay);
+/**
+ * @deprecated Use `spinner({ text }).start()` and `.stop()` / `.succeed()`.
+ *
+ * Animates `...` on the current line until you call `stop()`. The v1
+ * implementation never stopped on its own — this shim returns a handle
+ * so the interval can actually be cleared.
+ */
+export function displayThreeDotsAnimation(_iterations = 3, delay = 1000): SpinnerHandle {
+  return spinner({ text: "...", interval: delay, frames: [".", "..", "..."] }).start();
 }
