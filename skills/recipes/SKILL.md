@@ -2,8 +2,6 @@
 name: mongez-copper-recipes
 description: |
   End-to-end recipes for @mongez/copper — combining spinner + progress + log + colors + box + link to build CLI experiences: themed deploy script, file-walker with progress, error reporting with boxed callouts, --quiet / --no-color flag handling, dual stdout/stderr logging.
-  TRIGGER when: user asks "show me a real example using @mongez/copper / how do I structure a CLI with @mongez/copper / build a polished CLI experience / wire color + spinner + progress together"; combining two or more `@mongez/copper` primitives in one flow.
-  SKIP: single-function lookups (use the per-feature skill); React/web UI work.
 ---
 
 # Recipes

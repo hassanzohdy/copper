@@ -2,8 +2,6 @@
 name: mongez-copper-log
 description: |
   Themed CLI logger with `debug` / `info` / `success` / `warn` / `error` levels, colored symbol prefixes, level filtering, and a custom output stream. Errors serialize stack traces; plain values pass through `JSON.stringify` for structured printing.
-  TRIGGER when: code imports `log`, `createLogger`, `Logger`, `LogLevel`, or `LoggerOptions` from `@mongez/copper`; user asks "how do I print colored info / warn / error logs in a CLI / silence info messages in quiet mode / log to stderr"; replacing `consola`, `signale`, `ansi-colors` + manual prefix.
-  SKIP: pino/winston-style structured JSON logging for production servers; browser console (this writes to `process.stdout` by default).
 ---
 
 # Log
@@ -68,9 +66,3 @@ const log = createLogger({ level: process.env.QUIET ? "warn" : "debug" });
 log.debug("verbose stuff"); // hidden when QUIET=1
 log.warn("still shown");
 ```
-
-## When to reach for `log` vs `console`
-
-- Use `log` for CLI tooling output where colored levels improve scannability.
-- Use `console` (or a real logger like `pino`) for server / production logging where you need structured JSON, timestamps, or transports.
-- Use `process.stderr.write` directly when you want zero ANSI formatting — `log` always emits its symbol prefix.

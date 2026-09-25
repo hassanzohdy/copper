@@ -4,6 +4,11 @@ All notable changes to `@mongez/copper` are documented here. The format follows 
 
 ---
 
+## [2.1.3] — 2026-09-25
+
+### Changed
+- Added a grouped Agent Kit skills index for topic-based discovery.
+
 ## [2.1.2] — Docs lead with chaining
 
 ### Changed

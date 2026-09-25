@@ -2,8 +2,6 @@
 name: mongez-copper-spinner
 description: |
   Single-line animated CLI spinner with `start` / `stop` / `update` / `succeed` / `fail` / `warn` / `info` finalizers, customizable frames, interval, and color. Auto-degrades to a single-line print in non-TTY streams (CI, piped output).
-  TRIGGER when: code imports `spinner`, `SpinnerHandle`, or `SpinnerOptions` from `@mongez/copper`; user asks "how do I show a spinner / loading indicator / ora replacement / busy indicator while awaiting an async task"; replacing `ora`, `cli-spinner`, `node-spinner`.
-  SKIP: progress-with-known-total scenarios — use the `progress` skill instead; browser/React loading indicators (use a CSS animation or React component).
 ---
 
 # Spinner

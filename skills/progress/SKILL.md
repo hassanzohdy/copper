@@ -2,8 +2,6 @@
 name: mongez-copper-progress
 description: |
   Known-total CLI progress bar with `tick` / `update` / `done` / `stop`, customizable width, fill/empty glyphs, color, and template tokens (`:bar` `:current` `:total` `:percent` `:eta` `:elapsed`). TTY-aware — gracefully prints a single completion line in non-TTY streams.
-  TRIGGER when: code imports `progress`, `ProgressHandle`, or `ProgressOptions` from `@mongez/copper`; user asks "how do I draw a progress bar / show percentage of N items processed / ETA in CLI"; replacing `cli-progress`, `progress`, `gauge`.
-  SKIP: unknown-total / indeterminate loading — use the `spinner` skill instead; React/web progress UI.
 ---
 
 # Progress

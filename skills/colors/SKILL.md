@@ -2,8 +2,6 @@
 name: mongez-copper-colors
 description: |
   ANSI colorizer with a 20+ named palette (basic 4-bit + 256-color hues like `lime`, `teal`, `brown`, `gold`, `chocolate`, `pink`, `purple`, `lavender`, `indigo`, `orange`, `slate`), foreground / background / *Bright* / *bgBright* variants, plus modifiers (`bold`, `italic`, `dim`, `underline`, `inverse`, `hidden`, `strikethrough`, `reset`). Supports BOTH chalk-style chaining (`colors.red.bold("x")`) and picocolors-style composition (`colors.red(colors.bold("x"))`). `NO_COLOR` and `FORCE_COLOR` aware.
-  TRIGGER when: code imports `colors`, `createColors`, `Colors`, `ColorName`, `ChainFormatter`, or `Formatter` from `@mongez/copper`; user asks "how do I color CLI text / chain colors / replace chalk / detect NO_COLOR / force colors / 256-color terminal output / get a typed color name"; calls like `colors.red(x)`, `colors.red.bold(x)`, `colors.bgGold(x)`, `colors.bold(colors.cyan(x))`.
-  SKIP: browser/CSS styling (this is ANSI only); `console.log` without `@mongez/copper`; React/JSX text styling.
 ---
 
 # Colors

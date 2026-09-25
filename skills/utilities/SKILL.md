@@ -2,8 +2,6 @@
 name: mongez-copper-utilities
 description: |
   Small CLI utilities — `link` (OSC-8 terminal hyperlinks with `text (url)` fallback), `stripAnsi` (remove every ANSI escape including OSC-8), `symbols` (✔ ✖ ℹ ⚠ → ❯ … • ─ + Braille spinner frames with ASCII fallbacks on legacy Windows), `isColorSupported`, `detectColorSupport`.
-  TRIGGER when: code imports `link`, `stripAnsi`, `symbols`, `SymbolName`, `isColorSupported`, or `detectColorSupport` from `@mongez/copper`; user asks "how do I make a clickable terminal link / strip ANSI from a string / get a check or cross symbol / detect color support / handle NO_COLOR"; calls like `link("docs", url)` or `stripAnsi(output)`.
-  SKIP: HTML anchor tags or React links; emoji-only output with no `@mongez/copper` import.
 ---
 
 # Utilities
