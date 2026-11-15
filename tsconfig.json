@@ -2,6 +2,7 @@
   "compilerOptions": {
     "target": "ESNext",
     "module": "commonjs",
+    "moduleResolution": "bundler" /* TS 7 removed node10, the old default for commonjs. */,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,

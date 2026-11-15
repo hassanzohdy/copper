@@ -16,8 +16,9 @@
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
-    "typescript": "^5.4.0",
-    "vitest": "^3.0.0"
+    "typescript": "^7.0.2",
+    "vite": "^8.3.8",
+    "vitest": "^5.1.0"
   },
   "keywords": [
     "ansi",
@@ -39,5 +40,6 @@
     "256-color",
     "typescript",
     "zero-dependency"
-  ]
+  ],
+  "packageManager": "pnpm@12.15.0"
 }
