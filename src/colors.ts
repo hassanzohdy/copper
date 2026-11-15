@@ -13,10 +13,17 @@ const replaceClose = (
   replace: string,
   index: number,
 ): string => {
-  const start = string.substring(0, index) + replace;
-  const end = string.substring(index + close.length);
-  const nextIndex = end.indexOf(close);
-  return ~nextIndex ? start + replaceClose(end, close, replace, nextIndex) : start + end;
+  let result = "";
+  let remaining = string;
+  let nextIndex = index;
+
+  while (~nextIndex) {
+    result += remaining.substring(0, nextIndex) + replace;
+    remaining = remaining.substring(nextIndex + close.length);
+    nextIndex = remaining.indexOf(close);
+  }
+
+  return result + remaining;
 };
 
 const formatter = (open: string, close: string, replace: string = open): Formatter => {

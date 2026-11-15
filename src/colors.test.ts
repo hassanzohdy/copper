@@ -53,6 +53,15 @@ describe("createColors(enabled)", () => {
     expect(enabled.reset("hi")).toBe("\x1b[0mhi\x1b[0m");
     expect(disabled.reset("hi")).toBe("hi");
   });
+
+  it("does not overflow the call stack on input with many close-code occurrences", () => {
+    const closeCode = "\x1b[39m";
+    const adversarial = closeCode.repeat(200000);
+    expect(() => enabled.red(adversarial)).not.toThrow();
+    const result = enabled.red(adversarial);
+    expect(result.startsWith("\x1b[31m")).toBe(true);
+    expect(result.endsWith("\x1b[39m")).toBe(true);
+  });
 });
 
 describe("chainable colors API", () => {
