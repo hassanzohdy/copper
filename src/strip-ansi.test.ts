@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
 import { createColors } from "./colors";
-import { link } from "./link";
 import { stripAnsi } from "./strip-ansi";
 
 const c = createColors(true);
@@ -17,7 +16,9 @@ describe("stripAnsi", () => {
   });
 
   it("removes OSC-8 hyperlinks", () => {
-    const linked = link("repo", "https://example.com");
+    // The sequence `link()` emits when ANSI is supported, written out so this
+    // test does not depend on the machine's colour support.
+    const linked = "\x1b]8;;https://example.com\x1b\\repo\x1b]8;;\x1b\\";
     expect(stripAnsi(linked)).toBe("repo");
   });
 

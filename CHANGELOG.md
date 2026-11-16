@@ -13,6 +13,7 @@ All notable changes to `@mongez/copper` are documented here. The format follows 
 ### Changed
 
 - Development tooling. The package now uses pnpm 12: a standalone `pnpm-lock.yaml` replaces `yarn.lock` / `package-lock.json`, and CI uses `pnpm install --frozen-lockfile`. Tooling is TypeScript 7, Vite 8 and Vitest 5, and CI runs on Node 22 and 24, because Vitest 5 needs Node 22.12 or later.
+- The `link` and `stripAnsi` OSC-8 tests set the colour environment themselves, so they pass on any machine. They used to fail wherever `NO_COLOR` or `FORCE_COLOR=0` was set, or with no TTY and no `CI`.
 - `tsconfig.json` sets `moduleResolution: "bundler"`, because TypeScript 7 removed `node10`, the old default for `module: commonjs`.
 
 ## [2.1.3] — 2026-09-25
