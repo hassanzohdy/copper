@@ -4,6 +4,17 @@ All notable changes to `@mongez/copper` are documented here. The format follows 
 
 ---
 
+## [2.1.4] — 2026-11-16
+
+### Fixed
+
+- Colouring a string that contains many close codes no longer overflows the call stack. `replaceClose` in `src/colors.ts` was recursive, one call per close code; it is now a loop, and handles 200,000 occurrences (regression test in `src/colors.test.ts`). Output is unchanged.
+
+### Changed
+
+- Development tooling. The package now uses pnpm 12: a standalone `pnpm-lock.yaml` replaces `yarn.lock` / `package-lock.json`, and CI uses `pnpm install --frozen-lockfile`. Tooling is TypeScript 7, Vite 8 and Vitest 5, and CI runs on Node 22 and 24, because Vitest 5 needs Node 22.12 or later.
+- `tsconfig.json` sets `moduleResolution: "bundler"`, because TypeScript 7 removed `node10`, the old default for `module: commonjs`.
+
 ## [2.1.3] — 2026-09-25
 
 ### Changed
